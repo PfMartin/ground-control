@@ -7,6 +7,15 @@ import { fakeTransports, readyFrame } from './test-helpers'
 
 describe('chat UI', () => {
   beforeEach(() => localStorage.clear())
+  it('offers a keyboard-accessible skip link to the workspace', async () => {
+    const user = userEvent.setup()
+    render(<App controller={new ChatController(localStorage, fakeTransports().factory)} />)
+    await user.tab()
+    const skip = screen.getByRole('link', { name: 'Skip to workspace' })
+    expect(skip).toHaveFocus()
+    expect(skip).toHaveAttribute('href', '#workspace')
+    expect(screen.getByRole('main')).toHaveAttribute('id', 'workspace')
+  })
   it('connects with a token, waits for readiness, streams Markdown, and labels historical sessions', async () => {
     const user = userEvent.setup(); const fake = fakeTransports(); const controller = new ChatController(localStorage, fake.factory)
     render(<App controller={controller} />)

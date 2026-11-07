@@ -139,7 +139,7 @@ export function App({ controller }: { controller: ChatController }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const nearBottom = useRef(true)
   useEffect(() => { nearBottom.current = true; setConnectingForm(false) }, [selected?.id])
-  useEffect(() => { const node = scrollRef.current; if (node && nearBottom.current) node.scrollTop = node.scrollHeight }, [messages, selected?.id])
+  useEffect(() => { const node = scrollRef.current; if (node && nearBottom.current && messages.length > 0) node.scrollTop = node.scrollHeight }, [messages, selected?.id])
   const select = (id: string) => { setForm(null); setConnectingForm(false); controller.selectBackend(id) }
   const remove = (backend: Backend) => { if (window.confirm(`Remove “${backend.name}” and delete its local conversation?`)) { controller.removeBackend(backend.id); setForm(null); setConnectingForm(false) } }
   const reset = () => {
@@ -148,8 +148,9 @@ export function App({ controller }: { controller: ChatController }) {
     else if (status !== 'connecting' && window.confirm('Delete this historical local transcript?')) controller.clearHistory(selected.id)
   }
   return <div className="app-shell">
+    <a className="skip-link" href="#workspace">Skip to workspace</a>
     <aside className="sidebar">
-      <div className="brand"><div className="brand-icon">✳</div><div><strong>ground control</strong><span>AGENT WORKSPACE</span></div></div>
+      <div className="brand"><div className="brand-icon" aria-hidden="true">&gt;_</div><div><strong>Ground Control</strong><span>AGENT WORKSPACE / 01</span></div></div>
       <div className="sidebar-heading"><span>BACKENDS</span><button className="icon-button" aria-label="Add backend" title="Add backend" onClick={() => { setConnectingForm(false); setForm('new') }}>+</button></div>
       <nav className="backend-list" aria-label="Backends">
         {data.backends.map((backend) => <button key={backend.id} className={`backend-item ${selected?.id === backend.id ? 'selected' : ''}`} onClick={() => select(backend.id)} aria-current={selected?.id === backend.id ? 'true' : undefined}>
@@ -160,7 +161,7 @@ export function App({ controller }: { controller: ChatController }) {
       {form && <BackendForm key={form} backend={editing} onCancel={() => setForm(null)} onSave={(name, url, limit) => { if (editing) controller.updateBackend(editing.id, name, url, limit); else controller.addBackend(name, url, limit); setForm(null) }} />}
       <div className="sidebar-bottom"><span className="sidebar-foot-icon">◇</span><span>One connection at a time<br /><small>Conversations stored locally</small></span></div>
     </aside>
-    <main className="main-panel">
+    <main className="main-panel" id="workspace" tabIndex={-1}>
       <header className="topbar"><div className="topbar-title"><span className="eyebrow">CONVERSATION</span><h1>{selected?.name ?? 'Select a backend'}</h1></div><div className="topbar-actions">
         {selected && <><span className={`status ${status}`} role="status"><span className="status-dot" />{status === 'connected' ? 'Connected' : status === 'connecting' ? 'Connecting' : status === 'error' ? 'Connection error' : 'Disconnected'}</span>
           {status === 'connected' || status === 'connecting' ? <button className="button quiet" onClick={() => controller.disconnect()}>Disconnect</button> : <button className="button connect" onClick={() => { setForm(null); if (selected.needsReview) setForm(selected.id); else setConnectingForm(true) }}>Connect <span aria-hidden="true">↗</span></button>}
@@ -172,7 +173,7 @@ export function App({ controller }: { controller: ChatController }) {
       <div className="conversation" ref={scrollRef} onScroll={(event) => { const node = event.currentTarget; nearBottom.current = node.scrollHeight - node.scrollTop - node.clientHeight < 120 }}>
         <div className="conversation-inner">
           {selected && <div className="conversation-heading"><span>MESSAGE HISTORY</span>{status === 'connected' ? <button className="text-button" onClick={reset} disabled={!canReset}>New session</button> : status !== 'connecting' && messages.length > 0 ? <button className="text-button" onClick={reset}>Clear history</button> : null}</div>}
-          {messages.length > 0 ? <div className="messages">{groups.map((group, index) => <section key={`${group.id}-${index}`} className="session-group"><div className="session-label">{group.id === currentSessionId && status === 'connected' ? 'CURRENT SESSION' : 'HISTORICAL SESSION · NOT IN AGENT CONTEXT'}</div><div className="messages">{group.messages.map((message) => <MessageView key={message.id} message={message} />)}</div></section>)}</div> : <div className="empty-state"><div className="empty-icon">✳</div><h2>{selected ? 'Start a conversation' : 'Your workspace awaits'}</h2><p>{selected ? status === 'connected' ? 'Your fresh agent session is ready.' : 'Connect to your backend, then send a message to get started.' : 'Add or select a backend to start chatting.'}</p><div className="empty-tags"><span>✦ &nbsp; Streaming responses</span><span>⌘ &nbsp; Markdown ready</span></div></div>}
+          {messages.length > 0 ? <div className="messages">{groups.map((group, index) => <section key={`${group.id}-${index}`} className="session-group"><div className="session-label">{group.id === currentSessionId && status === 'connected' ? 'CURRENT SESSION' : 'HISTORICAL SESSION · NOT IN AGENT CONTEXT'}</div><div className="messages">{group.messages.map((message) => <MessageView key={message.id} message={message} />)}</div></section>)}</div> : <div className="empty-state"><div className="empty-icon" aria-hidden="true">&gt;_</div><span className="empty-eyebrow">01 — WORKSPACE</span><h2>{selected ? 'Start a conversation' : 'Your workspace awaits'}</h2><p>{selected ? status === 'connected' ? 'Your fresh agent session is ready.' : 'Connect to your backend, then send a message to get started.' : 'Add or select a backend to start chatting.'}</p><div className="empty-tags"><span>Streaming responses</span><span>Markdown ready</span></div></div>}
           {(runLabel || tools.length > 0) && <div className="activity" role="status">{runLabel && <div>{runLabel}</div>}{tools.map((tool) => <div key={tool.id}>{tool.name} · {tool.state === 'running' ? 'running' : tool.state === 'failed' ? 'failed' : 'complete'}</div>)}</div>}
         </div>
       </div>
