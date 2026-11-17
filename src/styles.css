@@ -128,8 +128,8 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 
 .composer-wrap { width: 100%; padding: 0 36px 20px; }
 .composer { padding: 14px 16px 12px; border: 1px solid var(--line-strong); background: var(--surface-alt); }
-.composer:focus-within { border-color: #a78bfa; }
-.composer textarea { display: block; width: 100%; min-height: 48px; max-height: 180px; resize: vertical; border: 0; background: transparent; color: #fafafa; font-size: 13px; line-height: 1.6; }
+.composer:focus-within { border-color: #a78bfa; outline: 2px solid #a78bfa; outline-offset: 3px; }
+.composer textarea { display: block; width: 100%; min-height: 48px; max-height: 180px; resize: vertical; border: 0; outline: none; background: transparent; color: #fafafa; font-size: 13px; line-height: 1.6; }
 .composer textarea::placeholder { color: #a1a1aa; }
 .composer-footer { display: flex; align-items: center; justify-content: space-between; color: #b3b3bd; font-size: 10px; }
 .composer-actions { display: flex; align-items: center; gap: 8px; }
