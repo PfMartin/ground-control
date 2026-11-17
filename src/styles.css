@@ -178,6 +178,119 @@ button, a, input, textarea { transition: color 150ms, background-color 150ms, bo
   .button { padding: 8px 10px; }
   .composer-hint { text-align: left; }
 }
+/* The switch is available in both themes, including when no backend is selected. */
+.topbar-actions { flex-wrap: wrap; }
+.theme-toggle { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.theme-toggle .active { color: var(--accent); }
+.sidebar { scrollbar-color: var(--line-strong) var(--surface-alt); }
+.conversation { scrollbar-color: var(--line-strong) var(--surface); }
+.theme-switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; padding: 0; border: 1px solid var(--line-strong); border-radius: 20px; background: var(--surface-alt); }
+.theme-switch span { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--muted); transition: transform 150ms, background-color 150ms; }
+.theme-switch[aria-checked='true'] { border-color: #8b5cf6; background: #8b5cf6; }
+.theme-switch[aria-checked='true'] span { transform: translateX(16px); background: #100b19; }
+
+/* Earth & Linen: the default. SSP remains the original dark stylesheet above. */
+:root:not([data-theme='ssp']) {
+  font-family: 'DM Sans', 'Avenir Next', system-ui, sans-serif;
+  color: #302f28;
+  background: #f8f6f0;
+  color-scheme: light;
+  font-size: 15px;
+  --surface: #f8f6f0;
+  --surface-alt: #eeece3;
+  --line: #d7d4c8;
+  --line-strong: #b6b9aa;
+  --accent: #3e5741;
+  --muted: #6b695e;
+}
+:root:not([data-theme='ssp']) :focus-visible { outline-color: #4f6951; }
+:root:not([data-theme='ssp']) ::selection { color: #302f28; background: #d1dfcc; }
+:root:not([data-theme='ssp']) .skip-link { color: #fffdf8; background: #3e5741; }
+:root:not([data-theme='ssp']) .brand strong,
+:root:not([data-theme='ssp']) .backend-form h3,
+:root:not([data-theme='ssp']) .topbar h1,
+:root:not([data-theme='ssp']) .empty-state h2,
+:root:not([data-theme='ssp']) .markdown h1,
+:root:not([data-theme='ssp']) .markdown h2,
+:root:not([data-theme='ssp']) .markdown h3,
+:root:not([data-theme='ssp']) .markdown h4,
+:root:not([data-theme='ssp']) .dialog h2 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; }
+:root:not([data-theme='ssp']) .brand-icon,
+:root:not([data-theme='ssp']) .empty-icon { border-color: #a4b6a0; color: #3e5741; background: #e3eadf; }
+:root:not([data-theme='ssp']) .brand span,
+:root:not([data-theme='ssp']) .backend-label small,
+:root:not([data-theme='ssp']) .sidebar-bottom small { color: #6b695e; }
+:root:not([data-theme='ssp']) .icon-button { color: #6b695e; }
+:root:not([data-theme='ssp']) .icon-button:hover { border-color: #a4b6a0; color: #3e5741; background: #e3eadf; }
+:root:not([data-theme='ssp']) .backend-item { color: #302f28; }
+:root:not([data-theme='ssp']) .backend-item:hover { border-color: #bdcbb9; background: #e8ede3; }
+:root:not([data-theme='ssp']) .backend-item.selected { border-color: #a4b6a0; background: #e3eadf; color: #302f28; }
+:root:not([data-theme='ssp']) .backend-arrow,
+:root:not([data-theme='ssp']) .sidebar-foot-icon { color: #3e5741; }
+:root:not([data-theme='ssp']) .backend-dot.online,
+:root:not([data-theme='ssp']) .connected .status-dot { background: #4f6951; }
+:root:not([data-theme='ssp']) .sidebar-bottom { color: #302f28; }
+:root:not([data-theme='ssp']) .backend-form { background: #fffdf8; }
+:root:not([data-theme='ssp']) .backend-form label,
+:root:not([data-theme='ssp']) .connection-form label { color: #302f28; }
+:root:not([data-theme='ssp']) .backend-form input,
+:root:not([data-theme='ssp']) .connection-form input,
+:root:not([data-theme='ssp']) .dialog input,
+:root:not([data-theme='ssp']) .dialog textarea { color: #302f28; background: #fffdf8; }
+:root:not([data-theme='ssp']) .form-error,
+:root:not([data-theme='ssp']) .message-error { color: #9c503d; }
+:root:not([data-theme='ssp']) .button { color: #302f28; }
+:root:not([data-theme='ssp']) .button:hover { border-color: #4f6951; color: #3e5741; }
+:root:not([data-theme='ssp']) .button.primary,
+:root:not([data-theme='ssp']) .button.connect { border-color: #4f6951; background: #4f6951; color: #fffdf8; }
+:root:not([data-theme='ssp']) .button.primary:hover,
+:root:not([data-theme='ssp']) .button.connect:hover { border-color: #3e5741; background: #3e5741; color: #fffdf8; }
+:root:not([data-theme='ssp']) .topbar { background: #fffdf8; }
+:root:not([data-theme='ssp']) .status { color: #6b695e; }
+:root:not([data-theme='ssp']) .status.connected { color: #3e5741; }
+:root:not([data-theme='ssp']) .status.error { color: #9c503d; }
+:root:not([data-theme='ssp']) .status.error .status-dot { background: #9c503d; }
+:root:not([data-theme='ssp']) .status.connecting .status-dot { background: #805c27; }
+:root:not([data-theme='ssp']) .notices { border-color: #d6c6a9; background: #f7efdf; color: #755120; }
+:root:not([data-theme='ssp']) .connection-form { border-color: #bdcbb9; background: #e3eadf; }
+:root:not([data-theme='ssp']) .connection-form p { color: #555b50; }
+:root:not([data-theme='ssp']) .text-button { color: #6b695e; }
+:root:not([data-theme='ssp']) .text-button:hover { color: #3e5741; }
+:root:not([data-theme='ssp']) .empty-state p { color: #6b695e; }
+:root:not([data-theme='ssp']) .empty-tags span { color: #302f28; }
+:root:not([data-theme='ssp']) .session-group .session-label { color: #6b695e; }
+:root:not([data-theme='ssp']) .avatar { background: #fffdf8; color: #302f28; }
+:root:not([data-theme='ssp']) .assistant .avatar { border-color: #a4b6a0; background: #e3eadf; color: #3e5741; }
+:root:not([data-theme='ssp']) .message-flag { color: #805c27; }
+:root:not([data-theme='ssp']) .message-flag.error { color: #9c503d; }
+:root:not([data-theme='ssp']) .message-flag.streaming { color: #3e5741; }
+:root:not([data-theme='ssp']) .markdown { color: #302f28; font-size: 15px; line-height: 1.7; }
+:root:not([data-theme='ssp']) .markdown h1,
+:root:not([data-theme='ssp']) .markdown h2,
+:root:not([data-theme='ssp']) .markdown h3,
+:root:not([data-theme='ssp']) .markdown h4 { color: #302f28; }
+:root:not([data-theme='ssp']) .markdown a { color: #3e5741; }
+:root:not([data-theme='ssp']) .markdown pre { background: #eeece3; }
+:root:not([data-theme='ssp']) .markdown code { background: #e3eadf; }
+:root:not([data-theme='ssp']) .markdown pre code { background: none; }
+:root:not([data-theme='ssp']) .markdown blockquote { border-color: #4f6951; color: #6b695e; }
+:root:not([data-theme='ssp']) .typing span { background: #4f6951; }
+:root:not([data-theme='ssp']) .activity { color: #3e5741; }
+:root:not([data-theme='ssp']) .composer { border-color: #b6b9aa; background: #fffdf8; }
+:root:not([data-theme='ssp']) .composer:focus-within { border-color: #4f6951; outline-color: #4f6951; }
+:root:not([data-theme='ssp']) .composer textarea { color: #302f28; font-size: 14px; }
+:root:not([data-theme='ssp']) .composer textarea::placeholder,
+:root:not([data-theme='ssp']) .composer-footer,
+:root:not([data-theme='ssp']) .composer-hint { color: #6b695e; }
+:root:not([data-theme='ssp']) .send-button { border-color: #4f6951; background: #4f6951; color: #fffdf8; }
+:root:not([data-theme='ssp']) .send-button:not(:disabled):hover { border-color: #3e5741; background: #3e5741; }
+:root:not([data-theme='ssp']) .dialog-overlay { background: #302f28a8; }
+:root:not([data-theme='ssp']) .dialog { border-color: #a4b6a0; background: #fffdf8; }
+:root:not([data-theme='ssp']) .dialog p { color: #302f28; }
+:root:not([data-theme='ssp']) .dialog .dialog-timeout { color: #805c27; }
+:root:not([data-theme='ssp']) .theme-switch { background: #e3eadf; border-color: #a4b6a0; }
+:root:not([data-theme='ssp']) .theme-switch span { background: #4f6951; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }

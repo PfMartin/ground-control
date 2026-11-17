@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent, type KeyboardEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type FormEvent, type KeyboardEvent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ChatController } from './controller'
 import { DEFAULT_MAX_BYTES, isInsecureRemote, normalizeUrl } from './storage'
+import { loadTheme, saveTheme, type Theme } from './theme'
 import type { Backend, ExtensionDialog, Message } from './types'
 
 function BackendForm({ backend, onSave, onCancel }: { backend?: Backend; onSave: (name: string, url: string, limit: number) => void; onCancel: () => void }) {
@@ -128,6 +129,17 @@ export function App({ controller }: { controller: ChatController }) {
   const { data, status, notice, storageWarning, currentSessionId, canSend, canReset, canStop, busy, runLabel, dialogs, tools } = useSyncExternalStore(controller.subscribe, controller.getSnapshot)
   const [form, setForm] = useState<'new' | string | null>(null)
   const [connectingForm, setConnectingForm] = useState(false)
+  const [theme, setTheme] = useState<Theme>(loadTheme)
+  const [themeWarning, setThemeWarning] = useState<string | null>(null)
+  useLayoutEffect(() => {
+    document.documentElement.dataset.theme = theme
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#f8f6f0' : '#0f0f10')
+  }, [theme])
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'ssp' : 'light'
+    setTheme(next)
+    setThemeWarning(saveTheme(next) ? null : 'Theme preference could not be saved and may reset on reload.')
+  }
   const selected = data.backends.find((backend) => backend.id === data.selectedBackendId)
   const editing = form && form !== 'new' ? data.backends.find((backend) => backend.id === form) : undefined
   const messages = selected ? data.conversations[selected.id] ?? [] : []
@@ -163,13 +175,14 @@ export function App({ controller }: { controller: ChatController }) {
     </aside>
     <main className="main-panel" id="workspace" tabIndex={-1}>
       <header className="topbar"><div className="topbar-title"><span className="eyebrow">CONVERSATION</span><h1>{selected?.name ?? 'Select a backend'}</h1></div><div className="topbar-actions">
+        <div className="theme-toggle"><span className={theme === 'light' ? 'active' : ''} aria-hidden="true">Light</span><button type="button" className="theme-switch" role="switch" aria-label="SSP dark theme" aria-checked={theme === 'ssp'} onClick={toggleTheme}><span /></button><span className={theme === 'ssp' ? 'active' : ''} aria-hidden="true">SSP</span></div>
         {selected && <><span className={`status ${status}`} role="status"><span className="status-dot" />{status === 'connected' ? 'Connected' : status === 'connecting' ? 'Connecting' : status === 'error' ? 'Connection error' : 'Disconnected'}</span>
           {status === 'connected' || status === 'connecting' ? <button className="button quiet" onClick={() => controller.disconnect()}>Disconnect</button> : <button className="button connect" onClick={() => { setForm(null); if (selected.needsReview) setForm(selected.id); else setConnectingForm(true) }}>Connect <span aria-hidden="true">↗</span></button>}
           <button className="icon-button top-icon" title="Edit backend" aria-label="Edit backend" onClick={() => { setConnectingForm(false); setForm(selected.id) }}>⚙</button>
           <button className="icon-button top-icon" title="Remove backend" aria-label="Remove backend" onClick={() => remove(selected)}>×</button></>}
       </div></header>
       {connectingForm && selected && <ConnectionForm key={`connection-${selected.id}`} backend={selected} controller={controller} onClose={() => setConnectingForm(false)} />}
-      {(notice || storageWarning) && <div className="notices">{storageWarning && <p role="alert">{storageWarning}</p>}{notice && <p role="status">{notice}</p>}</div>}
+      {(notice || storageWarning || themeWarning) && <div className="notices">{storageWarning && <p role="alert">{storageWarning}</p>}{themeWarning && <p role="status">{themeWarning}</p>}{notice && <p role="status">{notice}</p>}</div>}
       <div className="conversation" ref={scrollRef} onScroll={(event) => { const node = event.currentTarget; nearBottom.current = node.scrollHeight - node.scrollTop - node.clientHeight < 120 }}>
         <div className="conversation-inner">
           {selected && <div className="conversation-heading"><span>MESSAGE HISTORY</span>{status === 'connected' ? <button className="text-button" onClick={reset} disabled={!canReset}>New session</button> : status !== 'connecting' && messages.length > 0 ? <button className="text-button" onClick={reset}>Clear history</button> : null}</div>}

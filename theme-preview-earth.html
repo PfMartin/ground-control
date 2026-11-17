@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Earth &amp; Linen — Ground Control theme preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f8f6f0;
+      --paper: #fffdf8;
+      --linen: #eeece3;
+      --sage-wash: #e3eadf;
+      --line: #d7d4c8;
+      --ink: #302f28;
+      --muted: #6b695e;
+      --sage: #4f6951;
+      --sage-dark: #3e5741;
+      --clay: #9c503d;
+      --ochre: #805c27;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: "DM Sans", "Avenir Next", Avenir, system-ui, sans-serif;
+      --display: "Fraunces", Georgia, serif;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--canvas); }
+    body { margin: 0; color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.65; }
+    .page { width: min(100% - 48px, 1280px); margin: 0 auto; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 28px 0; border-bottom: 1px solid var(--line); }
+    .wordmark { display: flex; align-items: center; gap: 12px; font-family: var(--sans); font-size: 15px; font-weight: 750; letter-spacing: -.02em; }
+    .mark { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--sage); background: var(--sage-wash); color: var(--sage-dark); font: 700 13px var(--mono); }
+    .header-note, .eyebrow, .section-number { color: var(--sage-dark); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .intro { display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: end; padding: 68px 0 58px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--display); font-weight: 500; letter-spacing: -.025em; line-height: 1.15; }
+    h1 { margin: 13px 0 0; font-size: clamp(38px, 6vw, 68px); font-weight: 600; }
+    h1 span { color: var(--sage); }
+    .intro-copy { max-width: 430px; margin: 0 0 3px; color: var(--muted); line-height: 1.8; }
+    .section { padding: 38px 0 48px; border-top: 1px solid var(--line); }
+    .section-header { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 24px; }
+    .section-header h2 { margin: 8px 0 0; font-size: 27px; }
+    .section-header p { max-width: 470px; margin: 0; color: var(--muted); font-size: 14px; }
+    .palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .swatch { min-width: 0; border: 1px solid var(--line); background: var(--paper); }
+    .swatch-color { height: 78px; border-bottom: 1px solid var(--line); background: var(--swatch); }
+    .swatch-info { padding: 12px 14px 14px; }
+    .swatch-title { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+    .swatch-title strong { font-family: var(--sans); font-size: 14px; }
+    .swatch-title code { color: var(--muted); font: 10px var(--mono); text-transform: uppercase; }
+    .swatch-info p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .preview-note { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .preview-note::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--sage); }
+    .app { display: grid; grid-template-columns: 245px minmax(0, 1fr); min-height: 660px; border: 1px solid var(--line); background: var(--paper); }
+    .sidebar { display: flex; flex-direction: column; padding: 25px 18px; border-right: 1px solid var(--line); background: var(--linen); }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 44px; }
+    .brand strong { display: block; font-family: var(--sans); font-size: 16px; line-height: 1.2; }
+    .brand small { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .1em; }
+    .sidebar-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .plus { color: var(--muted); font-size: 20px; line-height: 1; }
+    .backend { display: flex; align-items: center; gap: 10px; padding: 11px 9px; border: 1px solid #bdcbb9; background: var(--sage-wash); }
+    .dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--sage); }
+    .backend-name { min-width: 0; flex: 1; }
+    .backend-name strong, .backend-name small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .backend-name strong { font-size: 13px; }
+    .backend-name small { margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .arrow { color: var(--sage); font-size: 18px; }
+    .sidebar-bottom { display: flex; gap: 10px; align-items: center; margin-top: auto; padding-top: 42px; color: var(--muted); font-size: 11px; line-height: 1.8; }
+    .diamond { color: var(--sage); font-size: 20px; }
+    .workspace { display: flex; min-width: 0; flex-direction: column; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 18px 30px; border-bottom: 1px solid var(--line); background: var(--paper); }
+    .topbar h3 { margin: 5px 0 0; font-size: 18px; }
+    .top-actions { display: flex; align-items: center; gap: 16px; }
+    .status { display: inline-flex; align-items: center; gap: 7px; color: var(--sage-dark); font-size: 12px; white-space: nowrap; }
+    .mock-button { display: inline-block; padding: 8px 11px; border: 1px solid var(--line); color: var(--ink); font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .history { flex: 1; padding: 27px 30px 34px; background: var(--canvas); }
+    .history-heading { display: flex; justify-content: space-between; gap: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+    .history-heading .new-session { color: var(--muted); font-size: 12px; }
+    .session { margin: 25px 0 22px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+    .messages { display: grid; gap: 27px; max-width: 690px; }
+    .message { display: flex; align-items: flex-start; gap: 13px; }
+    .avatar { display: grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border: 1px solid var(--line); background: var(--paper); font-size: 11px; font-weight: 700; }
+    .avatar.agent { border-color: #bdcbb9; background: var(--sage-wash); color: var(--sage-dark); font-size: 17px; }
+    .message-body { min-width: 0; }
+    .message-body strong { display: block; padding-top: 5px; font-size: 13px; }
+    .message-body p { margin: 10px 0 0; color: var(--ink); font-size: 15px; line-height: 1.7; }
+    .message-body ul { margin: 10px 0 0; padding-left: 19px; font-size: 15px; line-height: 1.8; }
+    .message-body li::marker { color: var(--sage); }
+    .message-body em { color: var(--sage-dark); font-style: normal; font-weight: 700; }
+    .composer-area { padding: 0 30px 20px; background: var(--canvas); }
+    .composer { padding: 14px 15px 11px; border: 1px solid #c5c6b8; background: var(--paper); }
+    .placeholder { min-height: 48px; color: var(--muted); font-size: 14px; }
+    .composer-footer { display: flex; justify-content: space-between; align-items: end; color: var(--muted); font-size: 11px; }
+    .send { display: grid; width: 34px; height: 34px; place-items: center; background: var(--sage); color: var(--paper); font-size: 20px; line-height: 1; }
+    .hint { margin: 9px 0 0; color: var(--muted); font-size: 11px; text-align: right; }
+    .details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; padding: 30px 0 58px; border-top: 1px solid var(--line); }
+    .details h3 { margin: 0 0 8px; font-size: 17px; }
+    .details p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 20px 0 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+    @media (max-width: 800px) {
+      .intro { grid-template-columns: 1fr; gap: 20px; padding: 50px 0 44px; }
+      .palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section-header { align-items: start; flex-direction: column; gap: 10px; }
+      .app { grid-template-columns: 190px minmax(0, 1fr); }
+      .sidebar { padding: 20px 12px; }
+      .topbar, .history { padding-left: 20px; padding-right: 20px; }
+      .composer-area { padding-left: 20px; padding-right: 20px; }
+    }
+    @media (max-width: 600px) {
+      .page { width: min(100% - 32px, 1280px); }
+      .header-note { font-size: 9px; text-align: right; }
+      .swatch-title { display: block; }
+      .swatch-title code { display: block; margin-top: 2px; }
+      .app { display: flex; flex-direction: column; }
+      .sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { margin-bottom: 18px; }
+      .backend { max-width: 250px; }
+      .sidebar-bottom { display: none; }
+      .topbar { flex-wrap: wrap; }
+      .top-actions { flex-wrap: wrap; gap: 10px; }
+      .history { padding-top: 22px; }
+      .details { grid-template-columns: 1fr; gap: 22px; }
+      footer { flex-direction: column; gap: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <div class="wordmark"><span class="mark" aria-hidden="true">&gt;_</span> Ground Control</div>
+      <div class="header-note">Theme study / 01</div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><div class="eyebrow">A proposed light theme</div><h1 id="page-title">Earth <span>&amp;</span> Linen<span>.</span></h1></div>
+        <p class="intro-copy">A quiet, light-filled workspace inspired by natural materials. Warm off-whites, soft sage and grounded ink bring a little calm to the conversation.</p>
+      </section>
+
+      <section class="section" aria-labelledby="palette-title">
+        <div class="section-header">
+          <div><div class="section-number">01 / The palette</div><h2 id="palette-title">Colors with room to breathe.</h2></div>
+          <p>These are the proposed colors and their roles. Sage leads; clay and ochre are reserved for feedback, not decoration.</p>
+        </div>
+        <div class="palette">
+          <article class="swatch" style="--swatch: var(--canvas)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Warm Canvas</strong><code>#F8F6F0</code></div><p>Conversation background</p></div></article>
+          <article class="swatch" style="--swatch: var(--paper)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Soft Paper</strong><code>#FFFDF8</code></div><p>Elevated surfaces &amp; composer</p></div></article>
+          <article class="swatch" style="--swatch: var(--linen)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Natural Linen</strong><code>#EEECE3</code></div><p>Sidebar &amp; quiet surfaces</p></div></article>
+          <article class="swatch" style="--swatch: var(--sage-wash)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Sage Wash</strong><code>#E3EADF</code></div><p>Selected items &amp; agent avatar</p></div></article>
+          <article class="swatch" style="--swatch: var(--line)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Stone</strong><code>#D7D4C8</code></div><p>Subtle borders &amp; dividers</p></div></article>
+          <article class="swatch" style="--swatch: var(--ink)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Olive Ink</strong><code>#302F28</code></div><p>Primary text</p></div></article>
+          <article class="swatch" style="--swatch: var(--muted)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Warm Gray</strong><code>#6B695E</code></div><p>Secondary text &amp; hints</p></div></article>
+          <article class="swatch" style="--swatch: var(--sage)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Deep Sage</strong><code>#4F6951</code></div><p>Primary accent &amp; actions</p></div></article>
+          <article class="swatch" style="--swatch: var(--sage-dark)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Forest Sage</strong><code>#3E5741</code></div><p>Accent text &amp; hover</p></div></article>
+          <article class="swatch" style="--swatch: var(--clay)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Fired Clay</strong><code>#9C503D</code></div><p>Errors &amp; destructive feedback</p></div></article>
+          <article class="swatch" style="--swatch: var(--ochre)"><div class="swatch-color"></div><div class="swatch-info"><div class="swatch-title"><strong>Earth Ochre</strong><code>#805C27</code></div><p>Warnings &amp; notices</p></div></article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="preview-title">
+        <div class="section-header">
+          <div><div class="section-number">02 / In context</div><h2 id="preview-title">A conversation, reimagined.</h2></div>
+          <div class="preview-note">Static mockup · controls are illustrative</div>
+        </div>
+        <div class="app" aria-label="Example of the proposed theme in the Ground Control chat">
+          <aside class="sidebar" aria-label="Example sidebar">
+            <div class="brand"><div class="mark" aria-hidden="true">&gt;_</div><div><strong>Ground Control</strong><small>AGENT WORKSPACE / 01</small></div></div>
+            <div class="sidebar-heading"><span class="eyebrow">Backends</span><span class="plus" aria-hidden="true">+</span></div>
+            <div class="backend"><span class="dot" aria-hidden="true"></span><span class="backend-name"><strong>My assistant</strong><small>https://example.local/</small></span><span class="arrow" aria-hidden="true">›</span></div>
+            <div class="sidebar-bottom"><span class="diamond" aria-hidden="true">◇</span><span>One connection at a time<br>Conversations stored locally</span></div>
+          </aside>
+          <div class="workspace">
+            <div class="topbar"><div><div class="eyebrow">Conversation</div><h3>My assistant</h3></div><div class="top-actions"><span class="status"><span class="dot" aria-hidden="true"></span>Connected</span><span class="mock-button">Disconnect</span></div></div>
+            <div class="history">
+              <div class="history-heading"><span class="eyebrow">Message history</span><span class="new-session">New session</span></div>
+              <div class="session">CURRENT SESSION</div>
+              <div class="messages">
+                <article class="message"><div class="avatar" aria-hidden="true">Y</div><div class="message-body"><strong>You</strong><p>I'd love to make this weekend feel a little slower. Any ideas?</p></div></article>
+                <article class="message"><div class="avatar agent" aria-hidden="true">✳</div><div class="message-body"><strong>Agent</strong><p>That sounds lovely. Here are a few simple ways to make some space for yourself:</p><ul><li><em>Start gently</em> — enjoy a slow breakfast without a screen.</li><li><em>Get outside</em> — take a walk somewhere green.</li><li><em>Make something</em> — cook, garden, or pick up a book.</li></ul><p>There's no need to do it all. Pick whatever feels good.</p></div></article>
+                <article class="message"><div class="avatar" aria-hidden="true">Y</div><div class="message-body"><strong>You</strong><p>A walk and a good book sound perfect.</p></div></article>
+              </div>
+            </div>
+            <div class="composer-area"><div class="composer"><div class="placeholder">Send a message…</div><div class="composer-footer"><span>Markdown supported</span><span class="send" aria-hidden="true">↑</span></div></div><p class="hint">Enter to send &nbsp;·&nbsp; Shift + Enter for a new line</p></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="details">
+        <div><h3>Light, not stark</h3><p>Warm layers instead of pure white keep the workspace soft and easy on the eyes.</p></div>
+        <div><h3>Quietly earthy</h3><p>Sage brings a natural accent; clay and ochre are kept for meaningful states.</p></div>
+        <div><h3>Thoughtful typography</h3><p>Fraunces adds a gentle, organic touch to headings; DM Sans keeps conversations clear and comfortable.</p></div>
+      </div>
+    </main>
+    <footer><span>Ground Control / Theme study</span><span>For review only — no application changes</span></footer>
+  </div>
+</body>
+</html>

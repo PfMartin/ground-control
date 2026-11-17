@@ -4,9 +4,50 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 import { ChatController } from './controller'
 import { fakeTransports, readyFrame } from './test-helpers'
+import { THEME_STORAGE_KEY } from './theme'
 
 describe('chat UI', () => {
   beforeEach(() => localStorage.clear())
+  it('defaults to light and persists the keyboard-accessible SSP theme switch', async () => {
+    const user = userEvent.setup()
+    const controller = new ChatController(localStorage, fakeTransports().factory)
+    const view = render(<App controller={controller} />)
+    const toggle = screen.getByRole('switch', { name: 'SSP dark theme' })
+    expect(toggle).toHaveAttribute('aria-checked', 'false')
+    expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+    toggle.focus()
+    await user.keyboard(' ')
+    expect(toggle).toHaveAttribute('aria-checked', 'true')
+    expect(document.documentElement).toHaveAttribute('data-theme', 'ssp')
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('ssp')
+    view.unmount()
+    render(<App controller={controller} />)
+    expect(screen.getByRole('switch', { name: 'SSP dark theme' })).toHaveAttribute('aria-checked', 'true')
+    await user.click(screen.getByRole('switch', { name: 'SSP dark theme' }))
+    expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('light')
+  })
+  it('falls back to light for an invalid preference and warns if the choice cannot be saved', async () => {
+    localStorage.setItem(THEME_STORAGE_KEY, 'invalid')
+    const controller = new ChatController(localStorage, fakeTransports().factory)
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked') })
+    try {
+      render(<App controller={controller} />)
+      expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+      await userEvent.click(screen.getByRole('switch', { name: 'SSP dark theme' }))
+      expect(document.documentElement).toHaveAttribute('data-theme', 'ssp')
+      expect(screen.getByText(/Theme preference could not be saved/)).toBeInTheDocument()
+    } finally { setItem.mockRestore() }
+  })
+  it('still opens in light mode when the theme preference cannot be read', () => {
+    const controller = new ChatController(localStorage, fakeTransports().factory)
+    const getItem = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked') })
+    try {
+      render(<App controller={controller} />)
+      expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+      expect(screen.getByRole('switch', { name: 'SSP dark theme' })).toHaveAttribute('aria-checked', 'false')
+    } finally { getItem.mockRestore() }
+  })
   it('offers a keyboard-accessible skip link to the workspace', async () => {
     const user = userEvent.setup()
     render(<App controller={new ChatController(localStorage, fakeTransports().factory)} />)

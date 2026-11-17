@@ -29,6 +29,7 @@ The default per-backend WebSocket message limit is 131,072 bytes. If the server'
 
 ## Sessions and interaction
 
+- Earth & Linen is the default light theme. Use the theme switch in the header to choose the original SSP dark theme; the choice is stored locally in your browser.
 - One connection owns one fresh in-memory Pi session. Disconnecting, switching backends, reloading, or a server timeout destroys it. Retained local transcripts are labeled historical; a new agent does not see them. Prompts are never replayed automatically.
 - Send with Enter and insert a newline with Shift+Enter. One prompt is allowed at a time; the UI waits for `agent_settled`, not merely a prompt response or `agent_end`. A timed-out command has an **unknown outcome** and is never automatically resent. Wait for a late response or disconnect to start a fresh session.
 - **Stop** requests `abort`; it does not imply immediate completion. **New session** asks Pi to reset and clears prior local history only after Pi confirms success; an extension can cancel that request. When disconnected, **Clear history** only removes the local historical transcript.
